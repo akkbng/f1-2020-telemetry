@@ -1,0 +1,7 @@
+scrape_configs:
+  - job_name: f1-2020-telemetry
+    metrics_path: /metrics
+    scrape_interval: 1s
+    static_configs:
+      - targets:
+          - f1-telemetry:8080
