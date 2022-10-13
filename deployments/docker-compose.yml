@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  f1-telemetry:
+    build:
+      context: ../cmd/f1-telemetry-app
+    container_name: f1-telemetry
+    ports:
+      - 8080:8080
+      - 20777:20777/udp
+    expose:
+      - 8080
+      - 20777/udp
+
+
