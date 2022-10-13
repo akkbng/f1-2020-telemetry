@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/anilmisirlioglu/f1-telemetry-go/pkg/env/event"
 	"github.com/anilmisirlioglu/f1-telemetry-go/pkg/packets"
 	"github.com/anilmisirlioglu/f1-telemetry-go/pkg/telemetry"
@@ -30,14 +29,14 @@ func main() {
 		case event.SpeedTrapTriggered:
 			trap := packet.EventDetails.(*packets.SpeedTrap)
 			if trap.VehicleIdx == packet.Header.PlayerCarIndex {
-				fmt.Printf("Speed Trap: %f\n\n", trap.Speed)
+				log.Printf("Speed Trap: %f\n\n", trap.Speed)
 				speedTrapMetric.Set(float64(trap.Speed))
 			}
 			break
 		case event.FastestLap:
 			fp := packet.EventDetails.(*packets.FastestLap)
 			if fp.VehicleIdx == packet.Header.PlayerCarIndex {
-				fmt.Printf("Fastest Lap: %f seconds\n", fp.LapTime)
+				log.Printf("Fastest Lap: %f seconds\n", fp.LapTime)
 				fastestLapMetric.Set(float64(fp.LapTime))
 			}
 			break
@@ -48,20 +47,20 @@ func main() {
 		car := packet.CarTelemetryData[packet.Header.PlayerCarIndex]
 		speed := float64(car.Speed)
 		engineRPM := float64(car.EngineRPM)
-		fmt.Println("Received Speed :", speed)
+		log.Printf("Received Speed : %f \n", speed)
 		speedMetric.Set(speed)
 		engineRPMMetric.Set(engineRPM)
 
 		for i, breaks := range []string{"rl", "rr", "fl", "fr"} {
 			brakesTempMetric.WithLabelValues(breaks).Set(float64(car.BrakesTemperature[i]))
-			fmt.Println("Break temp :", float64(car.BrakesTemperature[i]))
+			log.Printf("Break temp : %f \n", float64(car.BrakesTemperature[i]))
 		}
 	})
 
 	client.OnLapPacket(func(packet *packets.PacketLapData) {
-		car := packet.LapData[packet.Header.PlayerCarIndex]
-		lastLapTime := float64(car.LastLapTime)
-		fmt.Println("Last Lap :", lastLapTime)
+		lapData := packet.LapData[packet.Header.PlayerCarIndex]
+		lastLapTime := float64(lapData.LastLapTime)
+		log.Printf("Last Lap : %f \n", lastLapTime)
 		lastLapTimeMetric.Set(lastLapTime)
 	})
 
