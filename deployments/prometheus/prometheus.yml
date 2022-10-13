@@ -1,5 +1,5 @@
 scrape_configs:
-  - job_name: f1-2020-telemetry
+  - job_name: f1-telemetry
     metrics_path: /metrics
     scrape_interval: 1s
     static_configs:
